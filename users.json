@@ -1,0 +1,47 @@
+[
+    {
+        "full_name": "Lucas",
+        "email": "123@gmail.com",
+        "phone_number": "",
+        "job_title": "Dono",
+        "badge_number": "L2RM1H",
+        "password": "123"
+    },
+    {
+        "full_name": "lucas",
+        "email": "lucas@gmail.com",
+        "phone_number": "",
+        "job_title": "SEO (Diretor Executivo)",
+        "badge_number": "7MCLDT",
+        "password": "123"
+    },
+    {
+        "full_name": " Lucas",
+        "email": "lachimolalala61@gmail.com",
+        "phone_number": "",
+        "job_title": "SEO (Diretor Executivo)",
+        "badge_number": "40DZKI",
+        "password": "123"
+    },
+    {
+        "full_name": "Lucas",
+        "email": "1@gmail.com",
+        "phone_number": "",
+        "job_title": "SEO (Diretor Executivo)",
+        "badge_number": "5HEP3A",
+        "password": "123"
+    },
+    {
+        "full_name": "lucas ",
+        "email": "12@gmail.com",
+        "phone_number": "",
+        "job_title": "SEO (Diretor Executivo)",
+        "badge_number": "BNVL5K",
+        "password": "123"
+    },
+    {
+        "email": "12345@gmail.com",
+        "password": "123",
+        "badge_number": "123"
+    }
+]
