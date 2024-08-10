@@ -1,8 +1,6 @@
-Claro, vou ajustar o texto para incluir informações sobre os departamentos adicionais e a importância da consolidação e simplificação dos processos. Também detalharei os benefícios da ferramenta para economia de recursos, otimização de tempo e unificação das áreas da empresa.
+# Sistema de Gestão Empresarial da Tecnology Academy
 
 ---
-
-# Sistema de Gestão Empresarial da Tecnology Academy
 
 ## Introdução
 
