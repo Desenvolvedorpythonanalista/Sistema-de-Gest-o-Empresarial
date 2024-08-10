@@ -4,7 +4,7 @@
 
 ## Introdução
 
-Olá, Dev Lucas aqui! Desenvolvi o Sistema de Gestão Empresarial da Tecnology Academy para transformar a forma como a empresa gerencia suas operações e equipes. O sistema é projetado para integrar e otimizar os processos de diversos departamentos, incluindo Marketing, SEO, Cientista de Dados, Advocacia e Contabilidade. Com uma plataforma centralizada e intuitiva, ofereço uma solução robusta para consolidar todas as áreas da empresa em um único lugar, promovendo eficiência e produtividade.
+Olá. Dev Lucas aqui! Desenvolvi o Sistema de Gestão Empresarial da Tecnology Academy para transformar a forma como a empresa gerencia suas operações e equipes. O sistema é projetado para integrar e otimizar os processos de diversos departamentos, incluindo Marketing, SEO, Cientista de Dados, Advocacia e Contabilidade. Com uma plataforma centralizada e intuitiva, ofereço uma solução robusta para consolidar todas as áreas da empresa em um único lugar, promovendo eficiência e produtividade.
 
 ## Funcionalidades Principais
 
