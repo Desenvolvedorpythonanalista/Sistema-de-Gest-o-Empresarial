@@ -63,7 +63,7 @@ def save_to_csv(data, filename):
 # Função para salvar e enviar a checklist do MKT para o SEO
 def save_and_send_checklist_mkt(results, signature, score):
     """
-    Salva os resultados da checklist em um arquivo CSV no diretório 'arquivos_recebidos_2' para MKT.
+    Salva os resultados da checklist em um arquivo CSV no diretório 'arquivos_recebidos_1' para MKT.
     
     Parameters:
     results (dict): Resultados da checklist.
@@ -71,14 +71,14 @@ def save_and_send_checklist_mkt(results, signature, score):
     score (float): Nota geral calculada.
     """
     unique_id = uuid.uuid4().hex  # Gera um identificador único
-    filename = f"checklist_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{unique_id}.csv"  # Define o nome do arquivo
+    filename = f"checklist_mkt_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{unique_id}.csv"  # Define o nome do arquivo
     data = {**results, "Assinatura do Revisor": signature, "Nota Geral": score}  # Inclui a assinatura e nota geral nos dados
     
-    ensure_directory_exists("arquivos_recebidos_2")  # Verifica e cria a pasta se não existir
-    filepath = os.path.join("arquivos_recebidos_2", filename)
+    ensure_directory_exists("arquivos_recebidos_1")  # Verifica e cria a pasta se não existir
+    filepath = os.path.join("arquivos_recebidos_1", filename)
     df = pd.DataFrame([data])  # Converte os dados em um DataFrame
     df.to_csv(filepath, index=False)  # Salva o DataFrame como CSV
-    st.success(f"Arquivo salvo como {filename} em 'arquivos_recebidos_2'")
+    st.success(f"Arquivo salvo como {filename} em 'arquivos_recebidos_1'")
     st.session_state.filepath = filepath
 
 # Função para salvar e enviar a checklist do SEO para o Dono
@@ -412,18 +412,20 @@ def dono_interface():
 
     st.title("Arquivos Recebidos")
 
-    sort_by = st.selectbox("Ordenar por", ["Nome do arquivo", "Ordem de Mês"], key="dono_sort_by")
+sort_by = st.selectbox("Ordenar por", ["Nome do arquivo", "Ordem de Mês"], key="dono_sort_by")
 
-    files = list_received_files()
-    files = sort_files(files, sort_by='name' if sort_by == 'Nome do arquivo' else 'month')
+# Listar os arquivos recebidos da pasta 'arquivos_recebidos_1' (onde o MKT salva os arquivos)
+files = list_received_files(directory="arquivos_recebidos_1")  
+files = sort_files(files, sort_by='name' if sort_by == 'Nome do arquivo' else 'month')
 
-    if files:
-        selected_file = st.selectbox("Escolha um arquivo para visualizar", files, key="dono_selecionar_arquivo")
-        if selected_file:
-            filepath = os.path.join("arquivos_recebidos_1", selected_file)
-            display_file_content(filepath)
-    else:
-        st.info("Nenhum arquivo recebido ainda.")
+if files:
+    selected_file = st.selectbox("Escolha um arquivo para visualizar", files, key="dono_selecionar_arquivo")
+    if selected_file:
+        filepath = os.path.join("arquivos_recebidos_1", selected_file)
+        display_file_content(filepath)
+else:
+    st.info("Nenhum arquivo recebido ainda.")
+
 
 # Interface do Streamlit para o MKT
 def mkt_interface():
