@@ -75,98 +75,6 @@ def save_to_csv(data, filename):
 
 # PASSO 3 - Registra os aquivos com (Nome, assinatura de revisão, e salva em um diretório) do Banco de Dados do Gerente de Marketing
   
-# Função para salvar e enviar uma checklist do GERENTE DE MARKETING para o CEO que será salvo na pasta Arquivos_recebidos_2 que o Cientista de dados e o Gerente podem acompanhar
-def save_and_send_checklist_mkt(results, signature, score):
-    """
-    Salva os resultados da checklist em um arquivo CSV no diretório 'arquivos_recebidos_2' para MKT.
-    
-    Parameters:
-    results (dict): Resultados da checklist.
-    signature (str): Assinatura do revisor.
-    score (float): Nota geral calculada.
-    """
-    unique_id = uuid.uuid4().hex  # Gera um identificador único
-    filename = f"checklist_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{unique_id}.csv"  # Define o nome do arquivo
-    data = {**results, "Assinatura do Revisor": signature, "Nota Geral": score}  # Inclui a assinatura e nota geral nos dados
-    
-    ensure_directory_exists("arquivos_recebidos_2")  # Verifica e cria a pasta se não existir
-    filepath = os.path.join("arquivos_recebidos_2", filename)
-    df = pd.DataFrame([data])  # Converte os dados em um DataFrame
-    df.to_csv(filepath, index=False)  # Salva o DataFrame como CSV
-    st.success(f"Arquivo salvo como {filename} em 'arquivos_recebidos_2'")
-    st.session_state.filepath = filepath
-
-    # Atualizar o arquivo de desempenho geral
-    update_performance_chart(data)
-
-    # Função para atualizar o gráfico de desempenho geral
-    def update_performance_chart(data):
-        """
-        Atualiza o gráfico de desempenho geral com os dados fornecidos.
-        
-        Parameters:
-        data (dict): Dados da checklist.
-        """
-        performance_file = "desempenho_geral.csv"
-
-        # Verificar se o arquivo de desempenho já existe
-        if os.path.exists(performance_file):
-            df_performance = pd.read_csv(performance_file)
-        else:
-            df_performance = pd.DataFrame(columns=["Data", "Nota Geral"])
-
-        # Adicionar os novos dados
-        new_data = pd.DataFrame([{
-            "Data": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            "Nota Geral": data["Nota Geral"]
-        }])
-        df_performance = pd.concat([df_performance, new_data], ignore_index=True)
-        
-        # Salvar os dados atualizados
-        df_performance.to_csv(performance_file, index=False)
-
-    # Função para exibir o gráfico de desempenho
-    def display_performance_chart():
-        """
-        Exibe o gráfico de desempenho geral com base nos dados salvos.
-        """
-        performance_file = "desempenho_geral.csv"
-
-        if os.path.exists(performance_file):
-            df_performance = pd.read_csv(performance_file)
-            st.line_chart(df_performance.set_index("Data")["Nota Geral"])
-        else:
-            st.info("Nenhum dado de desempenho disponível ainda.")
-
-
-
-
-# PASSO 4 - Registra os aquivos com (Nome, assinatura de revisão, e salva em um diretório) do Banco de Dados do Diretor Executivo
-
-# Função para salvar e enviar uma checklist dos Departamentos do CEO para o dono que será salvo na pasta Arquivos_recebidos_1 que o Cientista de dados e o Diretor podem acompanhar
-def save_and_send_checklist_seo(results, signature, score):
-    """
-    Salva os resultados da checklist em um arquivo CSV no diretório 'arquivos_recebidos_1'
-    
-    Parameters:
-    results (dict): Resultados da checklist.
-    signature (str): Assinatura do revisor.
-    score (float): Nota geral calculada.
-    """
-    unique_id = uuid.uuid4().hex  # Gera um identificador único
-    filename = f"CEO_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{unique_id}.csv"  # Define o nome do arquivo
-    data = {**results, "Assinatura do Revisor": signature, "Nota Geral": score}  # Inclui a assinatura e nota geral nos dados
-    
-    ensure_directory_exists("arquivos_recebidos_1")  # Verifica e cria a pasta se não existir
-    filepath = os.path.join("arquivos_recebidos_1", filename)
-    df = pd.DataFrame([data])  # Converte os dados em um DataFrame
-    df.to_csv(filepath, index=False)  # Salva o DataFrame como CSV
-    st.success(f"Arquivo salvo como {filename} em 'arquivos_recebidos_1'") # Nome do arquivo que o CEO salva para ele ver depois como está a sua área em Dashboards e tomada de ações estratégicas
-    st.session_state.filepath = filepath
-
-    # Atualizar o arquivo de desempenho geral
-    update_performance_chart(data)
-
 # Função para atualizar o gráfico de desempenho geral
 def update_performance_chart(data):
     """
@@ -205,6 +113,54 @@ def display_performance_chart():
         st.line_chart(df_performance.set_index("Data")["Nota Geral"])
     else:
         st.info("Nenhum dado de desempenho disponível ainda.")
+
+# Função para salvar e enviar uma checklist do GERENTE DE MARKETING para o CEO
+def save_and_send_checklist_mkt(results, signature, score):
+    """
+    Salva os resultados da checklist em um arquivo CSV no diretório 'arquivos_recebidos_2' para MKT.
+    
+    Parameters:
+    results (dict): Resultados da checklist.
+    signature (str): Assinatura do revisor.
+    score (float): Nota geral calculada.
+    """
+    unique_id = uuid.uuid4().hex  # Gera um identificador único
+    filename = f"checklist_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{unique_id}.csv"  # Define o nome do arquivo
+    data = {**results, "Assinatura do Revisor": signature, "Nota Geral": score}  # Inclui a assinatura e nota geral nos dados
+    
+    ensure_directory_exists("arquivos_recebidos_2")  # Verifica e cria a pasta se não existir
+    filepath = os.path.join("arquivos_recebidos_2", filename)
+    df = pd.DataFrame([data])  # Converte os dados em um DataFrame
+    df.to_csv(filepath, index=False)  # Salva o DataFrame como CSV
+    st.success(f"Arquivo salvo como {filename} em 'arquivos_recebidos_2'")
+    st.session_state.filepath = filepath
+
+    # Atualizar o arquivo de desempenho geral
+    update_performance_chart(data)
+
+# Função para salvar e enviar uma checklist dos Departamentos do CEO para o dono
+def save_and_send_checklist_seo(results, signature, score):
+    """
+    Salva os resultados da checklist em um arquivo CSV no diretório 'arquivos_recebidos_1'
+    
+    Parameters:
+    results (dict): Resultados da checklist.
+    signature (str): Assinatura do revisor.
+    score (float): Nota geral calculada.
+    """
+    unique_id = uuid.uuid4().hex  # Gera um identificador único
+    filename = f"CEO_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{unique_id}.csv"  # Define o nome do arquivo
+    data = {**results, "Assinatura do Revisor": signature, "Nota Geral": score}  # Inclui a assinatura e nota geral nos dados
+    
+    ensure_directory_exists("arquivos_recebidos_1")  # Verifica e cria a pasta se não existir
+    filepath = os.path.join("arquivos_recebidos_1", filename)
+    df = pd.DataFrame([data])  # Converte os dados em um DataFrame
+    df.to_csv(filepath, index=False)  # Salva o DataFrame como CSV
+    st.success(f"Arquivo salvo como {filename} em 'arquivos_recebidos_1'") # Nome do arquivo que o CEO salva para ele ver depois como está a sua área em Dashboards e tomada de ações estratégicas
+    st.session_state.filepath = filepath
+
+    # Atualizar o arquivo de desempenho geral
+    update_performance_chart(data)
 
 
 
@@ -908,12 +864,12 @@ def login_cadastro():
         password = st.text_input("Senha", type="password")
         
         if st.button("Entrar"):
-            # Aqui você pode implementar a lógica para verificar o login
-            # Exemplo: Verificação fictícia
-            if username and password:  # Suponha que qualquer combinação funcione para fins de exemplo
+            # Lógica de verificação de login
+            if username and password:  # Exemplo de verificação simples
                 st.session_state.logged_in = True
                 st.session_state.username = username
                 st.success("Login realizado com sucesso!")
+                st.experimental_set_query_params(reload=True)  # Força um recarregamento
             else:
                 st.error("Nome de usuário ou senha incorretos. Tente novamente.")
     
@@ -925,16 +881,17 @@ def login_cadastro():
 
         if st.button("Cadastrar"):
             if password == confirm_password:
-                # Aqui você pode implementar a lógica para salvar o novo usuário
+                # Lógica para salvar o novo usuário
                 st.session_state.username = username
                 st.session_state.registration_complete = True
                 st.success("Cadastro realizado com sucesso! Agora faça login para acessar a plataforma.")
                 st.session_state.logged_in = False  # Assegure que o usuário será solicitado a fazer login
+                st.experimental_set_query_params(reload=True)  # Força um recarregamento
             else:
                 st.error("As senhas não coincidem. Tente novamente.")
 
     # Título estilizado abaixo da seção de login e cadastro
-    st.markdown("<h2 style='text-align: center; color: #007bff;'> Sistema de gestão comercial |                _DevLucas</h2>", unsafe_allow_html=True)                
+    st.markdown("<h2 style='text-align: center; color: #007bff;'> Sistema de gestão comercial | _DevLucas</h2>", unsafe_allow_html=True)                
 
     # Seção de Redes Sociais
     st.markdown("""
