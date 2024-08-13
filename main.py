@@ -7,11 +7,6 @@ import json
 import string
 import random
 
-
-
-
-# PASSO 1 - Onde os seus arquivos da Empresa ficarão salvos = Em um Diretório (Pode ser em um Banco na prática)
-
 # Cria o diretório 'arquivos_recebidos' se não existir
 os.makedirs("arquivos_recebidos", exist_ok=True)
 
@@ -31,11 +26,6 @@ def ensure_directory_exists(directory):
     """
     if not os.path.exists(directory):
         os.makedirs(directory)
-
-
-
-
-# PASSO 2 - Como os seus arquivos serão salvos (Excel, CSV, PDF, Etc)
 
 # Função para salvar os resultados em um arquivo CSV
 def save_to_csv(data, filename):
@@ -70,12 +60,7 @@ def save_to_csv(data, filename):
     df.to_csv(filepath, index=False)  # Salva o DataFrame como CSV
     st.success(f"Arquivo salvo como {filename} em 'arquivos_recebidos_3'")
 
-
-
-
-# PASSO 3 - Registra os aquivos com (Nome, assinatura de revisão, e salva em um diretório) do Banco de Dados do Gerente de Marketing
-  
-# Função para salvar e enviar uma checklist do GERENTE DE MARKETING para o CEO que será salvo na pasta Arquivos_recebidos_2 que o Cientista de dados e o Gerente podem acompanhar
+# Função para salvar e enviar a checklist do MKT para o SEO
 def save_and_send_checklist_mkt(results, signature, score):
     """
     Salva os resultados da checklist em um arquivo CSV no diretório 'arquivos_recebidos_2' para MKT.
@@ -96,57 +81,10 @@ def save_and_send_checklist_mkt(results, signature, score):
     st.success(f"Arquivo salvo como {filename} em 'arquivos_recebidos_2'")
     st.session_state.filepath = filepath
 
-    # Atualizar o arquivo de desempenho geral
-    update_performance_chart(data)
-
-    # Função para atualizar o gráfico de desempenho geral
-    def update_performance_chart(data):
-        """
-        Atualiza o gráfico de desempenho geral com os dados fornecidos.
-        
-        Parameters:
-        data (dict): Dados da checklist.
-        """
-        performance_file = "desempenho_geral.csv"
-
-        # Verificar se o arquivo de desempenho já existe
-        if os.path.exists(performance_file):
-            df_performance = pd.read_csv(performance_file)
-        else:
-            df_performance = pd.DataFrame(columns=["Data", "Nota Geral"])
-
-        # Adicionar os novos dados
-        new_data = pd.DataFrame([{
-            "Data": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            "Nota Geral": data["Nota Geral"]
-        }])
-        df_performance = pd.concat([df_performance, new_data], ignore_index=True)
-        
-        # Salvar os dados atualizados
-        df_performance.to_csv(performance_file, index=False)
-
-    # Função para exibir o gráfico de desempenho
-    def display_performance_chart():
-        """
-        Exibe o gráfico de desempenho geral com base nos dados salvos.
-        """
-        performance_file = "desempenho_geral.csv"
-
-        if os.path.exists(performance_file):
-            df_performance = pd.read_csv(performance_file)
-            st.line_chart(df_performance.set_index("Data")["Nota Geral"])
-        else:
-            st.info("Nenhum dado de desempenho disponível ainda.")
-
-
-
-
-# PASSO 4 - Registra os aquivos com (Nome, assinatura de revisão, e salva em um diretório) do Banco de Dados do Diretor Executivo
-
-# Função para salvar e enviar uma checklist dos Departamentos do CEO para o dono que será salvo na pasta Arquivos_recebidos_1 que o Cientista de dados e o Diretor podem acompanhar
+# Função para salvar e enviar a checklist do SEO para o Dono
 def save_and_send_checklist_seo(results, signature, score):
     """
-    Salva os resultados da checklist em um arquivo CSV no diretório 'arquivos_recebidos_1'
+    Salva os resultados da checklist em um arquivo CSV no diretório 'arquivos_recebidos_1' para SEO.
     
     Parameters:
     results (dict): Resultados da checklist.
@@ -154,67 +92,19 @@ def save_and_send_checklist_seo(results, signature, score):
     score (float): Nota geral calculada.
     """
     unique_id = uuid.uuid4().hex  # Gera um identificador único
-    filename = f"CEO_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{unique_id}.csv"  # Define o nome do arquivo
+    filename = f"checklist_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{unique_id}.csv"  # Define o nome do arquivo
     data = {**results, "Assinatura do Revisor": signature, "Nota Geral": score}  # Inclui a assinatura e nota geral nos dados
     
     ensure_directory_exists("arquivos_recebidos_1")  # Verifica e cria a pasta se não existir
     filepath = os.path.join("arquivos_recebidos_1", filename)
     df = pd.DataFrame([data])  # Converte os dados em um DataFrame
     df.to_csv(filepath, index=False)  # Salva o DataFrame como CSV
-    st.success(f"Arquivo salvo como {filename} em 'arquivos_recebidos_1'") # Nome do arquivo que o CEO salva para ele ver depois como está a sua área em Dashboards e tomada de ações estratégicas
+    st.success(f"Arquivo salvo como {filename} em 'arquivos_recebidos_1'")
     st.session_state.filepath = filepath
-
-    # Atualizar o arquivo de desempenho geral
-    update_performance_chart(data)
-
-# Função para atualizar o gráfico de desempenho geral
-def update_performance_chart(data):
-    """
-    Atualiza o gráfico de desempenho geral com os dados fornecidos.
-    
-    Parameters:
-    data (dict): Dados da checklist.
-    """
-    performance_file = "desempenho_geral.csv"
-
-    # Verificar se o arquivo de desempenho já existe
-    if os.path.exists(performance_file):
-        df_performance = pd.read_csv(performance_file)
-    else:
-        df_performance = pd.DataFrame(columns=["Data", "Nota Geral"])
-
-    # Adicionar os novos dados
-    new_data = pd.DataFrame([{
-        "Data": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-        "Nota Geral": data["Nota Geral"]
-    }])
-    df_performance = pd.concat([df_performance, new_data], ignore_index=True)
-    
-    # Salvar os dados atualizados
-    df_performance.to_csv(performance_file, index=False)
-
-# Função para exibir o gráfico de desempenho
-def display_performance_chart():
-    """
-    Exibe o gráfico de desempenho geral com base nos dados salvos.
-    """
-    performance_file = "desempenho_geral.csv"
-
-    if os.path.exists(performance_file):
-        df_performance = pd.read_csv(performance_file)
-        st.line_chart(df_performance.set_index("Data")["Nota Geral"])
-    else:
-        st.info("Nenhum dado de desempenho disponível ainda.")
-
-
-
-
-# PASSO 5 - Registra os aquivos com (Nome, assinatura de revisão, e salva em um diretório) do Banco de Dados Final da Empresa
-
-# Função para salvar e enviar uma checklist dos Departamentos do Cientista de Dados para o dono que será salvo na pasta Arquivos_recebidos que o Cientista de dados poderá acompanhar 
+  
 def save_and_send_checklist_dono(results, signature, score):
     """
-    Salva os resultados da checklist em um arquivo CSV no diretório 'arquivos_recebidos'
+    Salva os resultados da checklist em um arquivo CSV no diretório 'arquivos_recebidos' para o Dono.
     
     Parameters:
     results (dict): Resultados da checklist.
@@ -224,7 +114,7 @@ def save_and_send_checklist_dono(results, signature, score):
     # Gera um identificador único para o arquivo
     unique_id = uuid.uuid4().hex
     # Define o nome do arquivo com data e hora atual
-    filename = f"Dados_da_empresa_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{unique_id}.csv"
+    filename = f"checklist_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{unique_id}.csv"
     # Inclui a assinatura e a nota geral nos dados
     data = {**results, "Assinatura do Revisor": signature, "Nota Geral": score}
 
@@ -239,11 +129,6 @@ def save_and_send_checklist_dono(results, signature, score):
     # Informa ao usuário e salva o caminho do arquivo na sessão
     st.success(f"Arquivo salvo como {filename} em 'arquivos_recebidos'")
     st.session_state.filepath = filepath
-
-
-
-
-# PASSO 6 - CALCULAR os dados de Tarefas Conclúidas na antes de enviar 
 
 # Função para calcular a nota geral da checklist
 def calculate_score_simple(checklist_items, results):
@@ -278,23 +163,18 @@ def calculate_progress(checklist_items, results):
     checked_items = sum(results.get(item, False) for item in checklist_items)  # Contagem de itens marcados como concluídos
     return round((checked_items / total_items) * 100, 1)  # Retorna o progresso em percentual
 
-
-
-
-# PASSO 7 - VER OS ARQUIVOS QUE O SEU HIERÁRQUICO INFERIOR ENVIOU PRA VOCê
-
 # Função para listar arquivos CSV recebidos para o Dono
 def list_received_files():
     """
-    Lista todos os arquivos CSV no diretório 'arquivos_recebidos_1'.
+    Lista todos os arquivos CSV no diretório 'arquivos_recebidos'.
     
     Returns:
     list: Lista de nomes de arquivos CSV.
     """
-    files = [f for f in os.listdir("arquivos_recebidos_1") if f.endswith(".csv")]                  # Exibe os arquivos que o CEO salvou no VS CODE
+    files = [f for f in os.listdir("arquivos_recebidos") if f.endswith(".csv")]
     return files
 
-# Função para listar arquivos CSV das tarefas realizadas pelo GERENTE de Marketing para o CEO
+# Função para listar arquivos CSV recebidos para o Marketer
 def list_received_files():
     """
     Lista todos os arquivos CSV no diretório 'arquivos_recebidos_2'.
@@ -302,10 +182,10 @@ def list_received_files():
     Returns:
     list: Lista de nomes de arquivos CSV.
     """
-    files = [f for f in os.listdir("arquivos_recebidos_2") if f.endswith(".csv")] # Exibe os arquivos que o Gerente de Marketing salvou no VS CODE
+    files = [f for f in os.listdir("arquivos_recebidos_2") if f.endswith(".csv")]
     return files
 
-# Função para listar arquivos CSV recebidos para o MKT
+# Função para listar arquivos CSV recebidos para o Marketer
 def list_received_files():
     """
     Lista todos os arquivos CSV no diretório 'arquivos_recebidos_3'.
@@ -313,13 +193,8 @@ def list_received_files():
     Returns:
     list: Lista de nomes de arquivos CSV.
     """
-    files = [f for f in os.listdir("arquivos_recebidos_3") if f.endswith(".csv")] # Exibe os arquivos que o Gerente de Marketing salvou no VS CODE
+    files = [f for f in os.listdir("arquivos_recebidos_3") if f.endswith(".csv")]
     return files
-
-
-
-
-# PASSO 8 - Filtrar e extrair algumas informações em Dataframe dos arquivos recebidos
 
 # Função para extrair a data do nome do arquivo
 def extract_date_from_filename(filename):
@@ -377,11 +252,6 @@ def sort_files(files, sort_by='name'):
         files.sort(key=lambda x: extract_date_from_filename(x) if extract_date_from_filename(x) != "Data inválida" else datetime(1900, 1, 1))
     return files
 
-
-
-
-# PASSO 9 - Registrar, gerar, autenticar e salvar os dados de acesso do USUÁRIO (Os Funcionários)
-
 # Função para carregar os dados dos usuários
 def load_user_data():
     if not os.path.exists("users.json"):
@@ -423,11 +293,6 @@ def verify_confirmation_code(email, code):
         if user["email"] == email and user.get("confirmation_code") == code:
             return True
     return False
-
-
-
-
-# PASSO 10 - PERMITIR CADASTRO DE NOVOS USUÁRIOS
 
 # Função de login e cadastro
 def login():
@@ -472,14 +337,8 @@ def confirm_access():
             st.success("Código de confirmação correto. Acesso concedido!")
             st.experimental_rerun()  # Recarrega a página para mostrar a interface principal
         else:
-            st.error("Código de confirmação incorreto. Tente novamente.")
+            st.error("Código de confirmação incorreto. Tente novamente.")                          
 
-
-
-
-# PASSO 11 - A INTERFACE DE CADA FUNCIONÁRIO
-
-    #INTERFACE 01
 # Interface do Streamlit para o Dono
 def dono_interface():
     st.title("Checklist Mensal do Dono com o CEO Diretor Executivo da Empresa")
@@ -551,7 +410,7 @@ def dono_interface():
             else:
                 st.error("Primeiro, salve a checklist antes de enviar.")
 
-    st.title("Arquivos enviados") # Ficará armazenado na pasta arquivos_recebidos
+    st.title("Arquivos Recebidos")
 
     sort_by = st.selectbox("Ordenar por", ["Nome do arquivo", "Ordem de Mês"], key="dono_sort_by")
 
@@ -561,15 +420,11 @@ def dono_interface():
     if files:
         selected_file = st.selectbox("Escolha um arquivo para visualizar", files, key="dono_selecionar_arquivo")
         if selected_file:
-            filepath = os.path.join("arquivos_recebidos_1", selected_file) # O DONO tem acesso aos dados da pasta "arquivos_recebidos_1", que está sob posse posse do CEO
+            filepath = os.path.join("arquivos_recebidos_1", selected_file)
             display_file_content(filepath)
     else:
         st.info("Nenhum arquivo recebido ainda.")
 
-
-
-
-    #INTERFACE 02
 # Interface do Streamlit para o MKT
 def mkt_interface():
     st.title("Business Book do Gerente de SEO Marketing da Tecnology Academy")
@@ -765,7 +620,7 @@ def mkt_interface():
             else:
                 st.error("Primeiro, salve a checklist antes de enviar.")
 
-    st.title("Arquivos Enviados") # Ficará armazenado na pasta arquivos_recebidos_2
+    st.title("Arquivos Recebidos")
 
     sort_by = st.selectbox("Ordenar por", ["Nome do arquivo", "Ordem de Mês"], key="mkt_sort_by")
 
@@ -775,15 +630,11 @@ def mkt_interface():
     if files:
         selected_file = st.selectbox("Escolha um arquivo para visualizar", files, key="mkt_selecionar_arquivo")
         if selected_file:
-            filepath = os.path.join("arquivos_recebidos_2", selected_file)
+            filepath = os.path.join("arquivos_recebidos_3", selected_file)
             display_file_content(filepath)
     else:
         st.info("Nenhum arquivo recebido ainda.")
 
-
-
-
-    #INTERFACE 03
 # Interface do Streamlit para o SEO
 def seo_interface():
     st.title("Business Book do Diretor | & CEO Executivo da Tecnology Academy")
@@ -865,7 +716,7 @@ def seo_interface():
             else:
                 st.error("Primeiro, salve a checklist antes de enviar.")
 
-    st.title("Arquivos Enviados") # Ficará armazenado na pasta arquivos_recebidos_1
+    st.title("Arquivos Recebidos")
 
     sort_by = st.selectbox("Ordenar por", ["Nome do arquivo", "Ordem de Mês"], key="seo_sort_by")
 
@@ -875,15 +726,10 @@ def seo_interface():
     if files:
         selected_file = st.selectbox("Escolha um arquivo para visualizar", files, key="seo_selecionar_arquivo")
         if selected_file:
-            filepath = os.path.join("arquivos_recebidos_2", selected_file)  # O SEO tem acesso aos dados da pasta "arquivos_recebidos_2", que está sob posse posse do GERENTE DE MARKETING
+            filepath = os.path.join("arquivos_recebidos_2", selected_file)
             display_file_content(filepath)
     else:
         st.info("Nenhum arquivo recebido ainda.")
-
-
-
-
-# PASSO 12 - INTERFACE DE LOGIN
 
 # Interface de Login e Cadastro
 def login_cadastro():
@@ -936,6 +782,7 @@ def login_cadastro():
     # Título estilizado abaixo da seção de login e cadastro
     st.markdown("<h2 style='text-align: center; color: #007bff;'> Sistema de gestão comercial |                _DevLucas</h2>", unsafe_allow_html=True)                
 
+
     # Seção de Redes Sociais
     st.markdown("""
     <h1 align="center"></h1>
@@ -958,11 +805,6 @@ def login_cadastro():
     </div>
     """, unsafe_allow_html=True)
 
-
-
-
-# PASSO 13 - TELA DE BOAS VINDAS E BARRA LATERAL
-
 # Função principal para a interface de boas-vindas e navegação
 def main():
     # Verificar se o usuário está logado
@@ -979,7 +821,7 @@ def main():
         elif role == "MKT":
             mkt_interface()
         elif role == "SEO":
-            seo_interface()           
+            seo_interface()
 
 if __name__ == "__main__":
     main()
