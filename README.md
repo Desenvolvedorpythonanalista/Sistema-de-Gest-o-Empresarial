@@ -70,7 +70,3 @@ Estou aberto a sugestões e feedback para aprimorar o sistema conforme as necess
 Agradeço pela oportunidade de apresentar o Sistema de Gestão Empresarial da Tecnology Academy. Estou confiante de que esta ferramenta trará benefícios significativos para a gestão e operação da empresa, promovendo eficiência, economia de recursos e integração eficaz entre todas as áreas.
 
 Estou à disposição para responder a quaisquer perguntas e iniciar a implementação conforme sua disponibilidade.
-
----
-
-Esse texto fornece uma visão geral detalhada do sistema e destaca como ele pode beneficiar a empresa em termos de consolidação de processos, economia de recursos e otimização de tempo. Se precisar de mais ajustes ou informações, é só avisar!
